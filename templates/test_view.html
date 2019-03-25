@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item active">{{test.name}}</li>
+{% endblock %}
+
+{% block content %}
+        <h2>{{test.name}}</h2>
+        <br>
+        <h3>{{test.description}}</h3>
+
+        <h4>Test pass {{test.pass_counter}} times</h4>
+        <!-- block comments -->
+        <form method="post" novalidate>
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary btn-block">Start test</button>
+          </form>
+{% endblock %}
