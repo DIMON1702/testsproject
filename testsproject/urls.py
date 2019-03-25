@@ -31,6 +31,7 @@ urlpatterns = [
     url(r'^test_create/$', tests_views.test_create, name='test_create'),
     url(r'^account/$', accounts_views.UserUpdateView.as_view(), name='my_account'),
     url(r'^test_list/(\d+)/$', tests_views.test_list, name='test_list'),
+    url(r'^test_result/$', tests_views.test_result, name='test_result'),
     #url(r'^test_list/(\d+)/$', tests_views.TestListView.as_view(template_name='test_list.html'), name='test_list'),
     #url(r'^signup/$', accounts_views.signup, name='signup'),
     #url(r'^tests/$', tests_views.tests, name='tests' ),

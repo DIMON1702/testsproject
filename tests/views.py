@@ -13,45 +13,33 @@ def test_view(request, id):
     test = get_object_or_404(Test, id=id)
     questions = Question.objects.filter(test_id=id)
     if request.method == 'POST':
-        return render(request, 'test_list.html', {'test': test})
+        return redirect('test_list', test.id)#render(request, 'test_list.html', {'test': test})
     return render(request, 'test_view.html', {'test': test})
 
 @login_required
 def test_create(request):
     return render(request, 'test_create.html')
 
-class TestListView(ListView):
+'''class TestListView(ListView):
     model = Test
 
     def get_queryset(self):     
         queryset = super(TestListView, self).get_queryset()
         return  queryset.filter()
-
+'''
 
 def test_list(request, id):
     test = get_object_or_404(Test, id=id)
     questions = Question.objects.filter(test_id=id)
     
-    if request.method == 'POST':
-        form = QuestionForm(request.POST)
+    #if request.method == 'POST':
+    #    form = QuestionForm(request.POST)
+    #    return redirect('test_result')
         #if form.is_valid():
         #    return render(request, 'test_list.html', {'form': form, 'test': test, 'questions': questions}) 
         #else:
         #    return redirect('home')#form = QuestionForm(request.POST)
     return render(request, 'test_list.html', {'test': test, 'questions': questions})
-
-
-def question_form(request):
-    if request.method == 'POST':
-        form = QuestionForm(request.POST)
-        form.save()
-        return redirect('home')
-        if form.is_valid():
-            return redirect('home')
-    else:
-        form = QuestionForm()
-    return render(request, 'test_list.html', {'form': form})
-
 
 '''class QuizTake(FormView):
     form_class = QuestionForm
@@ -64,3 +52,25 @@ def question_form(request):
 
         return dict(kwargs, question=self.question)'''
 
+def test_result(request):
+    if request.method == 'POST':
+        correct_answers = 0
+        test_question_id = -1
+        user_answers = request.POST
+        question_count= len(user_answers)-1
+        for question in user_answers:
+            if question != 'csrfmiddlewaretoken' :
+                test_question_id = question
+                if Answer.objects.get(id=user_answers[question]).is_right is True:
+                    correct_answers += 1
+        try:
+            correct_answers_percent = correct_answers/question_count*100
+        except ZeroDivisionError:
+            correct_answers_percent = 0
+        test = Test.objects.get(id=Question.objects.get(id=test_question_id).test_id)
+        test.pass_counter += 1
+        test.save()
+        return render(request, 'test_result.html', {'result': correct_answers, 'percent_res': correct_answers_percent})
+        
+
+    return render(request, 'test_result.html')
