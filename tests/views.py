@@ -11,10 +11,12 @@ def home(request):
 
 def test_view(request, id):
     test = get_object_or_404(Test, id=id)
-    questions = Question.objects.filter(test_id=id)
-    comments = Comment.objects.filter(test_id=id)
+    #questions = Question.objects.filter(test_id=id)
+    #comments = Comment.objects.filter(test_id=id)
     if request.method == 'POST':
-        return redirect('test_list', test.id)#render(request, 'test_list.html', {'test': test})
+        return redirect('test_list', test.id) #render(request, 'test_list.html', {'test': test})
+        
+       
     return render(request, 'test_view.html', {'test': test})
 
 @login_required
@@ -85,3 +87,20 @@ def test_result(request):
         
 
     return render(request, 'test_result.html')
+
+@login_required
+def new_comment(request, id):
+    test = get_object_or_404(Test, id=id)
+
+    if request.method == 'POST':
+        message = request.POST['message']
+
+
+        comment = Comment.objects.create(
+            text=message,
+            test_id=id,
+            created_by=request.user
+        )
+
+        return redirect('test_view', test.id)
+    return render(request, 'new_comment.html', {'test': test})

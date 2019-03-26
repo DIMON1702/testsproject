@@ -28,6 +28,7 @@ urlpatterns = [
     url(r'^\w*/*login/$', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
     url(r'^logout/$', auth_views.LogoutView.as_view(), name='logout'),
     url(r'^test_view/(\d+)/$', tests_views.test_view, name='test_view'),
+    url(r'^test_view/(\d+)/new_comment$', tests_views.new_comment, name='new_comment'),
     url(r'^test_create/$', tests_views.test_create, name='test_create'),
     url(r'^account/$', accounts_views.UserUpdateView.as_view(), name='my_account'),
     url(r'^test_list/(\d+)/$', tests_views.test_list, name='test_list'),

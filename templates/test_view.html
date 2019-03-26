@@ -5,18 +5,22 @@
 {% endblock %}
 
 {% block content %}
+        <!-- block test -->
         <h2>{{test.name}}</h2>
         <br>
-        <h3>{{test.description}}</h3>
-
+        <h3>{{test.description}}</h3
         <h4>Test pass {{test.pass_counter}} times</h4>
-        
-        <!-- block comments -->
-        {% for comment in test.get_comments %}
-          <p>{{comment}} </p>
-         {% endfor %} 
         <form method="post" novalidate>
             {% csrf_token %}
             <button type="submit" class="btn btn-primary btn-block">Start test</button>
-          </form>
+        </form>
+        <!-- block comments -->
+        {% for comment in test.get_comments %}
+          <p>{{comment}}  {{comment.created_at}}</p>
+          <p>{{comment.created_by}}</p>
+          <br>  
+         {% endfor %} 
+        <form action="new_comment"> 
+            <button type="submit" class="btn btn-primary btn-block">Add comment</button>
+        </form>
 {% endblock %}
