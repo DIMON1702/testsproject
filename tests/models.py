@@ -15,7 +15,10 @@ class Test(models.Model):
         return self.name
     
     def get_questions(self):
-        return Question.objects.filter(test=self)#filter(question__test=self)
+        return Question.objects.filter(test=self)
+
+    def get_comments(self):
+        return Comment.objects.filter(test=self)    
 
 class Question(models.Model):
     name = models.CharField(max_length=100)
@@ -33,8 +36,6 @@ class Question(models.Model):
     def get_answers(self):
         return Answer.objects.filter(question=self)
 
-    
-
 
 class Answer(models.Model): 
     text = models.CharField(max_length=255)
@@ -51,8 +52,11 @@ class Comment(models.Model):
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='comments')
     test = models.ForeignKey(Test, related_name='comments')
 
+    def __str__(self):
+        return self.text
+
 
 class TestResult(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='testresult')
-    test = models.ForeignKey(Test, related_name='testresult')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='testresults')
+    test = models.ForeignKey(Test, related_name='testresults')
     correct_answers = models.IntegerField()
