@@ -6,7 +6,7 @@ from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.generic import UpdateView
 
-from .forms import SignUpForm
+from .forms import SignUpForm, AddProfileInfo
 #from .forms import AddProfileInfo
 from .models import User
 
@@ -22,21 +22,23 @@ def signup(request):
         form = SignUpForm()
     return render(request, 'signup.html', {'form': form})
 
-#def personal(request):
-#    form = AddProfileInfo(request.POST)
-#    return render(request, 'personal.html', {'form': form})
 
-@method_decorator(login_required, name='dispatch')
-class UserUpdateView(UpdateView):
-    model = User
-    fields = ('first_name', 'last_name', 'email', 'bio', 'birth_date', 'avatar' )
-    template_name = 'my_account.html'
-    success_url = reverse_lazy('my_account')
-
-    def get_object(self):
-        return self.request.user
-
-    def set_avatar(self):
-        _avatar = self.avatar
-        if not _avatar:
-            self.avatar="static/images/avatars/default-avatar.png"
+def save_profile(request):
+    #form = AddProfileInfo()
+    if request.method == "POST":
+      #Get the posted form
+        form = AddProfileInfo(request.POST, request.FILES)
+        if form.is_valid():
+            user_form = form.save(commit=False)
+            new_user=request.user
+            for field in form.Meta.fields:
+                setattr(new_user,field, getattr(user_form, field))
+            new_user.save()
+    else:
+        dictionary = {}
+        form_user = AddProfileInfo()
+        for field in form_user.Meta.fields:
+            dictionary[field] = getattr(request.user, field)
+        form = AddProfileInfo(initial=dictionary)
+        
+    return render(request, 'my_account.html', {'form': form})

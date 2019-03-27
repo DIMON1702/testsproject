@@ -10,9 +10,8 @@ class SignUpForm(UserCreationForm):
         model = User
         fields = ('username', 'email', 'password1', 'password2')
     
-
-'''class AddProfileInfo(forms.Form):
-    first_name = forms.CharField(max_length=20)
-    second_name = forms.CharField(max_length=25)
-    photo = None
-    '''
+class AddProfileInfo(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ('avatar','first_name', 'last_name', 'email', 'bio', 'birth_date')
+        

@@ -20,6 +20,9 @@ from django.contrib.auth import views as auth_views
 from accounts import views as accounts_views
 from tests import views as tests_views
 
+from django.conf.urls.static import static
+from django.conf import settings
+
 
 urlpatterns = [
     url(r'^$', tests_views.home, name='home'),
@@ -30,10 +33,10 @@ urlpatterns = [
     url(r'^test_view/(\d+)/$', tests_views.test_view, name='test_view'),
     url(r'^test_view/(\d+)/new_comment$', tests_views.new_comment, name='new_comment'),
     url(r'^test_create/$', tests_views.test_create, name='test_create'),
-    url(r'^account/$', accounts_views.UserUpdateView.as_view(), name='my_account'),
+    url(r'^account/$', accounts_views.save_profile, name='my_account'),
     url(r'^test_list/(\d+)/$', tests_views.test_list, name='test_list'),
     url(r'^test_result/$', tests_views.test_result, name='test_result'),
     #url(r'^test_list/(\d+)/$', tests_views.TestListView.as_view(template_name='test_list.html'), name='test_list'),
     #url(r'^signup/$', accounts_views.signup, name='signup'),
     #url(r'^tests/$', tests_views.tests, name='tests' ),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
