@@ -1,48 +1,61 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.views.generic import DetailView, ListView, TemplateView, FormView
+from django.core.exceptions import ObjectDoesNotExist
 
 from .models import Test, Question, Answer, Comment, TestResult
 from .forms import QuestionForm
+
 
 def home(request):
     tests = Test.objects.all()
     return render(request, 'home.html', {'tests': tests})
 
+
 def test_view(request, id):
     test = get_object_or_404(Test, id=id)
-    #questions = Question.objects.filter(test_id=id)
-    #comments = Comment.objects.filter(test_id=id)
+    # questions = Question.objects.filter(test_id=id)
+    # comments = Comment.objects.filter(test_id=id)
     if request.method == 'POST':
-        return redirect('test_list', test.id) #render(request, 'test_list.html', {'test': test})
-        
-       
+        try:
+            test_res = TestResult.objects.get(
+                test_id=id, user_id=request.user.id)
+        except ObjectDoesNotExist:
+            return redirect('test_list', test.id)
+        else:
+            return render(request, 'test_result.html', {'result': test_res.correct_answers, 'percent_res': test_res.correct_answers_percent})
+        # render(request, 'test_list.html', {'test': test})
+
     return render(request, 'test_view.html', {'test': test})
+
 
 @login_required
 def test_create(request):
     return render(request, 'test_create.html')
 
+
 '''class TestListView(ListView):
     model = Test
 
-    def get_queryset(self):     
+    def get_queryset(self):
         queryset = super(TestListView, self).get_queryset()
         return  queryset.filter()
 '''
 
+
 def test_list(request, id):
     test = get_object_or_404(Test, id=id)
     questions = Question.objects.filter(test_id=id)
-    
-    #if request.method == 'POST':
+
+    # if request.method == 'POST':
     #    form = QuestionForm(request.POST)
     #    return redirect('test_result')
-        #if form.is_valid():
-        #    return render(request, 'test_list.html', {'form': form, 'test': test, 'questions': questions}) 
-        #else:
-        #    return redirect('home')#form = QuestionForm(request.POST)
+    # if form.is_valid():
+    #    return render(request, 'test_list.html', {'form': form, 'test': test, 'questions': questions})
+    # else:
+    #    return redirect('home')#form = QuestionForm(request.POST)
     return render(request, 'test_list.html', {'test': test, 'questions': questions})
+
 
 '''class QuizTake(FormView):
     form_class = QuestionForm
@@ -55,14 +68,15 @@ def test_list(request, id):
 
         return dict(kwargs, question=self.question)'''
 
+
 def test_result(request):
     if request.method == 'POST':
         correct_answers = 0
         test_question_id = -1
         user_answers = request.POST
-        question_count= len(user_answers)-1
+        question_count = len(user_answers)-1
         for question in user_answers:
-            if question != 'csrfmiddlewaretoken' :
+            if question != 'csrfmiddlewaretoken':
                 test_question_id = question
                 if Answer.objects.get(id=user_answers[question]).is_right is True:
                     correct_answers += 1
@@ -70,23 +84,23 @@ def test_result(request):
             correct_answers_percent = correct_answers/question_count*100
         except ZeroDivisionError:
             correct_answers_percent = 0
-        
-        test_id = Question.objects.get(id=test_question_id).test_id
-        test = Test.objects.get(id=test_id)
-        test.pass_counter += 1
-        test.save()
 
-        try:
-            TestResult.objects.get(test_id=test_id, user_id=request.user.id)
-        except :
-            test_result = TestResult(test_id=test_id, correct_answers=correct_answers, user_id=request.user.id)
+        if test_question_id != -1:
+            test_id = Question.objects.get(id=test_question_id).test_id
+            test = Test.objects.get(id=test_id)
+            test.pass_counter += 1
+            test.save()
+
+            test_result = TestResult(
+                test_id=test_id, correct_answers=correct_answers, correct_answers_percent=correct_answers_percent, user_id=request.user.id)
             test_result.save()
 
-
-        return render(request, 'test_result.html', {'result': correct_answers, 'percent_res': correct_answers_percent})
-        
+            return render(request, 'test_result.html', {'result': correct_answers, 'percent_res': correct_answers_percent})
+        # else: #TODO: request to test_list
+        #    return render(request, 'test_view.html', {'test': test})
 
     return render(request, 'test_result.html')
+
 
 @login_required
 def new_comment(request, id):
@@ -94,7 +108,6 @@ def new_comment(request, id):
 
     if request.method == 'POST':
         message = request.POST['message']
-
 
         comment = Comment.objects.create(
             text=message,
