@@ -4,18 +4,24 @@ from django.views.generic import DetailView, ListView, TemplateView, FormView
 from django.core.exceptions import ObjectDoesNotExist
 
 from .models import Test, Question, Answer, Comment, TestResult
-from .forms import QuestionForm
+#from .forms import QuestionForm
 
 
 def home(request):
-    tests = Test.objects.all()
-    return render(request, 'home.html', {'tests': tests})
+    return render(request, 'home.html')
+
+# TODO:  search, filter forpassed tests
+
+
+def all_tests(request):
+    tests = Test.objects.all().order_by('-created_date')
+    tests_results = TestResult.objects.all()
+    user = request.user
+    return render(request, 'all_tests.html', {'tests': tests, 'tests_results': tests_results, 'user': user})
 
 
 def test_view(request, id):
     test = get_object_or_404(Test, id=id)
-    # questions = Question.objects.filter(test_id=id)
-    # comments = Comment.objects.filter(test_id=id)
     if request.method == 'POST':
         try:
             test_res = TestResult.objects.get(
@@ -28,9 +34,11 @@ def test_view(request, id):
 
     return render(request, 'test_view.html', {'test': test})
 
-
+# TODO: 4th step
 @login_required
 def test_create(request):
+    # if request.method == 'POST':
+
     return render(request, 'test_create.html')
 
 
@@ -43,32 +51,14 @@ def test_create(request):
 '''
 
 
+@login_required
 def test_list(request, id):
     test = get_object_or_404(Test, id=id)
     questions = Question.objects.filter(test_id=id)
-
-    # if request.method == 'POST':
-    #    form = QuestionForm(request.POST)
-    #    return redirect('test_result')
-    # if form.is_valid():
-    #    return render(request, 'test_list.html', {'form': form, 'test': test, 'questions': questions})
-    # else:
-    #    return redirect('home')#form = QuestionForm(request.POST)
     return render(request, 'test_list.html', {'test': test, 'questions': questions})
 
 
-'''class QuizTake(FormView):
-    form_class = QuestionForm
-
-    def get_form(self, *args, **kwargs):
-        return form_class(**self.get_form_kwargs())
-
-    def get_form_kwargs(self):
-        kwargs = super(QuizTake, self).get_form_kwargs()
-
-        return dict(kwargs, question=self.question)'''
-
-
+# @login_required
 def test_result(request):
     if request.method == 'POST':
         correct_answers = 0

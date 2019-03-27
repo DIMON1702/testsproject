@@ -24,12 +24,10 @@ class Test(models.Model):
 
 class Question(models.Model):
     name = models.CharField(max_length=100)
-    #answer = models.ForeignKey(Answer, related_name='questions')
     test = models.ForeignKey(Test, related_name='questions')
 
-    class Meta:
-        verbose_name = "Question"
-        #verbose_name_plural = _("Questions")
+    # class Meta:
+    #    verbose_name = "Question"
 
     def __str__(self):
         return self.name

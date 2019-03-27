@@ -5,14 +5,8 @@
 {% endblock %}
 
 {% block content %}
- <a href="test_create" class="btn btn-primary ml-2">Create test</a>
+  <h1>Welcome!</h1>
+  <a href="{% url 'all_tests'%}">View all tests</a>
   <br>
-  {% for test in tests %}
-      <a href="{% url 'test_view' test.id %}">{{ test.name }}</a>
-        {{test.description}}
-        <br>
-        <br>
-        <br>
-    {% endfor %}
-      <br>
+  <a href="test_create" class="btn btn-primary ml-2">Create test</a>
 {% endblock %}

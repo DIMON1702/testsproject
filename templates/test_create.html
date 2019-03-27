@@ -5,9 +5,55 @@
 {% endblock %}
 
 {% block content %}
-    <form method="post" novalidate>
-            {% csrf_token %}
-            {% include 'includes/form.html' %}
-            <button type="submit" class="btn btn-primary btn-block">Create test</button>
-          </form>
+     <div class="container">
+    <form method="post">
+      {% csrf_token %}
+      
+      <div class="row form-group data-container">
+        <div class="col-3">
+          <label>Test Name: </label>
+        </div>
+        <div class="col-9">
+          <input type="text" id="test_name" name="test_name" class="form-control"/>
+        </div>
+      </div>
+
+      <div class="row" id="test_container">
+
+        {% for j in j|rjust:5 %}<!--Тут цикл в 5 елементів (вопроси)-->
+        <div id="queston_1" name="queston_1" class="col-12 form-group data-container">
+            <div class="row">
+                <div class="col-3">
+                  <label>Question: </label>
+                </div>
+                <div class="col-9">
+                  <textarea id="question_text_1" name="question_text_1" class="form-control"></textarea>
+                </div>
+              </div>
+          <ul>
+              
+          {% for i in i|rjust:4 %}<!--Тут цикл в 4 елемента (відповіді)--> {{ forloop.counter }}
+            <li>
+              <div class="row">
+                <div class="col-1">
+                  <input type="radio" name="valid_answer{{j}}" value="answer_text{{i}}"/>
+                </div>
+                <div class="col-11">
+                  <input type="text" id="answer_text_1" name="valid_answer_1" class="form-control"/>
+                </div>
+              </div>
+            </li>
+             
+          {% endfor %}
+          </ul>
+          <button type="button" class="btn btn-danger btn-sm">Remove</button>
+        </div>
+       
+        {% endfor %}
+        </div>
+        
+        <input type="submit" value="Сохранить Тест" class="btn btn-warning">
+    </form>
+  </div>
+
 {% endblock %}

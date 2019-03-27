@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item active">Tests</li>
+{% endblock %}
+
+{% block content %}
+ <!--<a href="test_create" class="btn btn-primary ml-2">Create test</a>-->
+  <br>
+  {% for test in tests %}
+      <a href="{% url 'test_view' test.id %}">{{ test.name }}</a>
+      {% for test_result in tests_results %}
+            {% if test_result.test_id == test.id and test_result.user_id == user.id %}
+                <p>Right answers {{test_result.correct_answers}}</p>
+            {% endif %}
+            {% endfor %}
+        {{test.description}}
+        <br>
+        <br>
+        <br>
+    {% endfor %}
+      <br>
+{% endblock %}
+if 
