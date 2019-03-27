@@ -12,7 +12,7 @@
  
   <div class="row">
     <div class="col-lg-6 col-md-8 col-sm-10">
-    <img src={{ user.avatar }}>
+    <img src="{{ user.avatar.url }}" width=200>
       <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {% include 'includes/form.html' %}

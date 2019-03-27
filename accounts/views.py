@@ -26,19 +26,19 @@ def signup(request):
 def save_profile(request):
     #form = AddProfileInfo()
     if request.method == "POST":
-      #Get the posted form
+      # Get the posted form
         form = AddProfileInfo(request.POST, request.FILES)
         if form.is_valid():
             user_form = form.save(commit=False)
-            new_user=request.user
+            new_user = request.user
             for field in form.Meta.fields:
-                setattr(new_user,field, getattr(user_form, field))
+                setattr(new_user, field, getattr(user_form, field))
             new_user.save()
     else:
         dictionary = {}
-        form_user = AddProfileInfo()
-        for field in form_user.Meta.fields:
+        for field in AddProfileInfo().Meta.fields:
             dictionary[field] = getattr(request.user, field)
         form = AddProfileInfo(initial=dictionary)
-        
+
+    # BUG - если не загружается новое изображение и сохраняются изменения - выскакивает ошибка
     return render(request, 'my_account.html', {'form': form})
