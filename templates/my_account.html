@@ -12,7 +12,11 @@
  
   <div class="row">
     <div class="col-lg-6 col-md-8 col-sm-10">
-    <img src="{{ user.avatar.url }}" width=200>
+    {% if user.avatar %}
+      <img src="{{ user.avatar.url }}" width=200>
+    {% else %}
+      <img src="/media/avatars/default-avatar.png" width=200>
+    {% endif %}
       <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {% include 'includes/form.html' %}

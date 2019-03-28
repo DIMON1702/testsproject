@@ -4,7 +4,7 @@ from django.views.generic import DetailView, ListView, TemplateView, FormView
 from django.core.exceptions import ObjectDoesNotExist
 
 from .models import Test, Question, Answer, Comment, TestResult
-#from .forms import QuestionForm
+from .forms import AddTest
 
 
 def home(request):
@@ -37,9 +37,12 @@ def test_view(request, id):
 # TODO: 4th step
 @login_required
 def test_create(request):
-    # if request.method == 'POST':
+    if request.method == 'POST':
+        form = AddTest(request.POST)
 
-    return render(request, 'test_create.html')
+    else:
+        form = AddTest()
+    return render(request, 'test_create.html', {'form': form})
 
 
 '''class TestListView(ListView):

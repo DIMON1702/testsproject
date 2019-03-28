@@ -6,8 +6,8 @@ User = get_user_model()
 
 
 class SignUpForm(UserCreationForm):
-    email = forms.CharField(max_length=254, required=True,
-                            widget=forms.EmailInput())
+    #email = forms.CharField(max_length=254, required=True,
+                            #widget=forms.EmailInput())
 
     class Meta:
         model = User
