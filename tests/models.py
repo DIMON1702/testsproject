@@ -8,7 +8,8 @@ class Test(models.Model):
     description = models.CharField(max_length=255)
     pass_counter = models.IntegerField(default=0)
     created_date = models.DateTimeField(auto_now_add=True)
-    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='tests')
+    created_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, related_name='tests')
     #question = models.ForeignKey(Question, related_name='tests')
     #comment = models.ForeignKey(Comment, related_name='tests')
 
@@ -25,9 +26,6 @@ class Test(models.Model):
 class Question(models.Model):
     name = models.CharField(max_length=100)
     test = models.ForeignKey(Test, related_name='questions')
-
-    # class Meta:
-    #    verbose_name = "Question"
 
     def __str__(self):
         return self.name

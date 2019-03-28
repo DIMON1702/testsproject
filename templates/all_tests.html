@@ -6,15 +6,50 @@
 
 {% block content %}
  <!--<a href="test_create" class="btn btn-primary ml-2">Create test</a>-->
+
+  <form action="" method="GET">
+    <input type="text" name="q" />
+    <button type="submit">search</button>
+  </form>
   <br>
+  {% if seens != None %}
+    {% for seen in seens %}
+    
+      <a href="{% url 'test_view' seen.id %}">{{ seen.name }}</a>
+      <p>{{ seen.description }}</p>
+
+    {% empty %}
+
+      <p> No results </p>
+    {% endfor %}
+  {% endif %}
+
+
+  <form action="" method="GET">
+  Sorted by: new posts last
+    <input type="checkbox" name="order_by" />
+    <button type="submit">Change</button>
+  </form>
+
+
+<form action="" method="GET">
+  View 
+    All<input type="radio" name="view" value="all" checked/>
+    Passed<input type="radio" name="view" value="passed"/>
+    Not Passed<input type="radio" name="view" value="not_passed"/>
+    <button type="submit">Change</button>
+  </form>
+
+
   {% for test in tests %}
       <a href="{% url 'test_view' test.id %}">{{ test.name }}</a>
       {% for test_result in tests_results %}
-            {% if test_result.test_id == test.id and test_result.user_id == user.id %}
+           <!--DELETE--> {% if test_result.test_id == test.id and test_result.user_id == user.id %}  
+                <p>Test Passed!</p>
                 <p>Right answers {{test_result.correct_answers}}</p>
             {% endif %}
             {% endfor %}
-        {{test.description}}
+        <p>{{test.description}}</p>
         <br>
         <br>
         <br>

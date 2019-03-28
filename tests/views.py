@@ -14,9 +14,40 @@ def home(request):
 
 
 def all_tests(request):
-    tests = Test.objects.all().order_by('-created_date')
-    tests_results = TestResult.objects.all()
-    user = request.user
+    #sort_type = 'not_passed'
+    if 'q' in request.GET and request.GET['q']:
+        if request.GET['q'].strip():
+            query_string = request.GET.get('q')
+            seens = Test.objects.filter(name=query_string)
+        else:
+            seens = None
+        return render(request, 'all_tests.html', {'seens': seens})
+    else:
+        if 'order_by' in request.GET:
+            tests = Test.objects.all().order_by('created_date')
+        else:
+            tests = Test.objects.all().order_by('-created_date')
+        user = request.user
+        tests_results = TestResult.objects.filter(user_id=user.id)
+
+        if 'view' in request.GET:
+            #    tests_results = TestResult.objects.filter(
+            #        user_id=user.id).select_related('user')
+
+            tests_results = TestResult.objects.filter(
+                user_id=user.id).values('test_id')
+            tests = Test.objects.filter(id__in=tests_results)
+
+            # not that operation
+
+            tests = Test.objects.difference(Test.objects.filter().values('id'),
+                                            TestResult.objects.filter(user_id=user.id).values('test_id'))
+
+            # for test in tests:
+            #   if tests_result.filter(test_id__in=tests).exists():
+
+            # tests = Test.objects.filter(id=tests_user_pass.values('test_id')) #как здесь получить список всех моделей теста у которых тест_ид совпадает с ид теста?
+
     return render(request, 'all_tests.html', {'tests': tests, 'tests_results': tests_results, 'user': user})
 
 
