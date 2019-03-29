@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.views.generic import DetailView, ListView, TemplateView, FormView
 from django.core.exceptions import ObjectDoesNotExist
+import json
 
 from .models import Test, Question, Answer, Comment, TestResult
 from .forms import AddTest
@@ -141,3 +142,22 @@ def new_comment(request, id):
 
         return redirect('test_view', test.id)
     return render(request, 'new_comment.html', {'test': test})
+
+
+
+def test_json(request):
+    if request.method == 'POST':
+        new_test = json.loads(request.POST.jsonObj)
+        test_name = new_test["test_name"]
+        test_description = new_test["test_description"]
+        user = request.user
+        test = Test.objects.create(
+            name=test_name,
+            description=test_description,
+            created_by = user
+        )
+        #for question in new_test:
+
+
+       
+    return redirect ('test_create.html')

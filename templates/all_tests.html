@@ -43,6 +43,7 @@
 
   {% for test in tests %}
       <a href="{% url 'test_view' test.id %}">{{ test.name }}</a>
+      <p>Created {{test.created_date}}</p>
       {% for test_result in tests_results %}
            <!--DELETE--> {% if test_result.test_id == test.id and test_result.user_id == user.id %}  
                 <p>Test Passed!</p>

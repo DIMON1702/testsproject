@@ -7,9 +7,10 @@
 {% block content %}
         <!-- block test -->
         <h2>{{test.name}}</h2>
-        <br>
+        <br><p>{{test.created_date}}</p>
         <h3>{{test.description}}</h3>
         <h4>Test pass {{test.pass_counter}} times</h4>
+
         <form method="post" novalidate>
             {% csrf_token %}
             <button type="submit" class="btn btn-primary btn-block">Start test</button>
