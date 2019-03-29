@@ -147,17 +147,27 @@ def new_comment(request, id):
 
 def test_json(request):
     if request.method == 'POST':
-        new_test = json.loads(request.POST.jsonObj)
+        new_test = json.loads(request.POST['jsonObj'])
         test_name = new_test["test_name"]
         test_description = new_test["test_description"]
+        questions = new_test["questions"]
         user = request.user
         test = Test.objects.create(
             name=test_name,
             description=test_description,
             created_by = user
         )
-        #for question in new_test:
-
-
-       
-    return redirect ('test_create.html')
+        for question in questions:
+            question_name = question["text"]
+            new_question = Question.objects.create(
+                name=question_name,
+                test=test
+            )
+            answers = question["answers"]
+            for answer in answers:
+                new_answer = Answer.objects.create(
+                    text=answer["answer_text"],
+                    is_right=answer["isCorrect"],
+                    question=new_question
+                )
+    return redirect('all_tests')

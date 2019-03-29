@@ -10,8 +10,6 @@ class Test(models.Model):
     created_date = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL, related_name='tests')
-    #question = models.ForeignKey(Question, related_name='tests')
-    #comment = models.ForeignKey(Comment, related_name='tests')
 
     def __str__(self):
         return self.name

@@ -48,26 +48,35 @@ $(document).ready(function () {
     }
 
     var fillQuestions = function (test, data) {
+        var testQuestions = [];
         $(test).find('.question')
             .each(function (index, element) {
-                data['question' + index] = {};
-                data['question' + index]['text'] = $(element).find('.question-text').val();
-
-                fillAnswers(data['question' + index], element);
+                var question = {};
+                
+                question['text'] = $(element).find('.question-text').val();
+                fillAnswers(question, element);
+            
+                testQuestions.push(question);
             });
+
+        data['questions'] = testQuestions; 
     }
 
     var fillAnswers = function (question, data) {
+        var questionAnswers = [];
         $(data).find('li')
             .each(function (index, element) {
-                var answerIdentifier = 'answer' + index;
+                var answer = {};
                 var answerText = $(element).find('.answer');
                 var isCorrectAnswer = $(element).find('.radio-answer').is(':checked');
-                
-                question[answerIdentifier] = {};
-                question[answerIdentifier]['answer_text'] = $(answerText).val();
-                question[answerIdentifier]['isCorrect'] = isCorrectAnswer;
+      
+                answer['answer_text'] = $(answerText).val();
+                answer['isCorrect'] = isCorrectAnswer;
+
+                questionAnswers.push(answer);
             });
+
+        question['answers'] = questionAnswers;
     }
 
     // ==== End get post form data section ====

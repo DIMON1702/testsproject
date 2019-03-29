@@ -113,7 +113,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Kiev'
 
 USE_I18N = True
 
@@ -142,5 +142,4 @@ LOGIN_REDIRECT_URL = 'home'
 
 AUTH_USER_MODEL = 'accounts.User'
 
-APPEND_SLASH=False
 #DATE_INPUT_FORMAT = ['%d.%m.%Y']
