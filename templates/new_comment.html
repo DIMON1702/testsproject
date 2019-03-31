@@ -2,16 +2,12 @@
 
 {% block title %}New Comment{% endblock %}
 
-{% block breadcrumb %}
-  <li class="breadcrumb-item active">New comment</li>
-{% endblock %}
-
 {% block content %}
 
   <form method="post">
     {% csrf_token %}
-    <div class="form-group">
-      <label for="id_message">Comment</label>
+    <div class="form-group static-margin">
+      <h3><label for="id_message">New comment</label></h3>
       <textarea class="form-control" id="id_message" name="message" rows="5"></textarea>
     </div>
     <button type="submit" class="btn btn-success">Post</button>

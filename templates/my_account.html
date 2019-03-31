@@ -1,29 +1,20 @@
 {% extends 'base.html' %}
 
-
 {% block title %}My account{% endblock %}
 
-{% block breadcrumb %}
-  <li class="breadcrumb-item active">My account</li>
-{% endblock %}
-
 {% block content %}
-
- 
   <div class="row">
     <div class="col-lg-6 col-md-8 col-sm-10">
-    {% if user.avatar %}
-      <img src="{{ user.avatar.url }}" width=200>
-    {% else %}
-      <img src="/media/avatars/default-avatar.png" width=200>
-    {% endif %}
+      {% if user.avatar %}
+        <img src="{{ user.avatar.url }}" width=200>
+      {% else %}
+        <img src="/media/avatars/default-avatar.png" width=200>
+      {% endif %}
       <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {% include 'includes/form.html' %}
-        
         <button type="submit" class="btn btn-success">Save changes</button>
       </form>
-      <img src=""
     </div>
   </div>
 {% endblock %}

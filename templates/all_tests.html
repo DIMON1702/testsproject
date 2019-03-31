@@ -1,60 +1,113 @@
 {% extends 'base.html' %}
 
-{% block breadcrumb %}
-  <li class="breadcrumb-item active">Tests</li>
-{% endblock %}
+{% block title %}All tests{% endblock %}
 
 {% block content %}
- <!--<a href="test_create" class="btn btn-primary ml-2">Create test</a>-->
-
-  <form action="" method="GET">
-    <input type="text" name="q" />
-    <button type="submit">search</button>
-  </form>
-  <br>
-  {% if seens != None %}
+<br>
+<div class="row">
+  <div class="col">
+    <form action="" method="GET">
+      <input type="text" name="q" />
+      <button type="submit" class="btn btn-primary">search</button>
+    </form>
+    {% if seens != None %}
     {% for seen in seens %}
-    
-      <a href="{% url 'test_view' seen.id %}">{{ seen.name }}</a>
-      <p>{{ seen.description }}</p>
-
+    <a href="{% url 'test_view' seen.id %}">{{ seen.name }}</a>
+    <p>{{ seen.description }}</p>
     {% empty %}
-
-      <p> No results </p>
+    <p> No results </p>
     {% endfor %}
-  {% endif %}
+    {% endif %}
+  </div>
+  <div class="col">
+    <form method="GET">
+      New posts last
+      <input type="checkbox" name="order_by" />
 
+      View only passed tests
+      <input type="checkbox" name="view" />
+      <button type="submit" class="btn btn-primary">Change</button>
+    </form>
+  </div>
+</div>
 
-  <form action="" method="GET">
-  Sorted by: new posts last
-    <input type="checkbox" name="order_by" />
-    <button type="submit">Change</button>
-  </form>
-
-
-<form action="" method="GET">
-  View 
-    All<input type="radio" name="view" value="all" checked/>
-    Passed<input type="radio" name="view" value="passed"/>
-    Not Passed<input type="radio" name="view" value="not_passed"/>
-    <button type="submit">Change</button>
-  </form>
-
-
+{% if view == "all" %}
   {% for test in tests %}
+    <div class="card static-margin">
+      <div class="card-header">
+        Created {{test.created_date}}
+      </div>
+      <div class="card-body">
+        <h5 class="card-title">{{ test.name }}</h5>
+        <p class="card-text">{{test.description}}</p>
+        {% for test_result in tests_results %}
+          {% if test_result.test_id == test.id %}
+            <div class="alert alert-success" role="alert">
+            <p>Test Passed!</p>
+            <p>Right answers {{test_result.correct_answers}} - {{test_result.correct_answers_percent}}%</p>
+            </div>
+          {% endif %}
+        {% endfor %}
+        <a href="{% url 'test_view' test.id %}" class="btn btn-primary">View test</a>
+      </div>
+    </div>
+  {% endfor %}
+{% else %}
+  {% for test_result in tests_results %}
+    {% for test in tests %}
+      {% if test_result.test_id == test.id %}
+        <div class="card static-margin ">
+          <div class="card-header">
+            Created {{test.created_date}}
+          </div>
+          <div class="card-body">
+            <h5 class="card-title">{{ test.name }}</h5>
+            <p class="card-text">{{test.description}}</p>
+            <div class="alert alert-success" role="alert">
+            <p>Test Passed!</p>
+            <p>Right answers {{test_result.correct_answers}} - {{test_result.correct_answers_percent}}%</p>
+            </div>
+            <a href="{% url 'test_view' test.id %}" class="btn btn-primary">View test</a>
+          </div>
+        </div>
+      {% endif %}
+    {% endfor %}
+  {% endfor %}
+{% endif %}
+{% endblock %}
+
+
+
+
+
+
+{% if view == "all" %}
+  {% for test in tests %}
+  <div>
+    <a href="{% url 'test_view' test.id %}">{{ test.name }}</a>
+    <p>Created {{test.created_date}}</p>
+    {% for test_result in tests_results %}
+      {% if test_result.test_id == test.id %}
+        <p>Test Passed!</p>
+        <p>Right answers {{test_result.correct_answers}}</p>
+      {% endif %}
+    {% endfor %}
+    <p>{{test.description}}</p>
+  </div>
+  {% endfor %}
+
+{% else %}
+{% for test_result in tests_results %}
+  {% for test in tests %}
+    {% if test_result.test_id == test.id %}
+    <div>
       <a href="{% url 'test_view' test.id %}">{{ test.name }}</a>
       <p>Created {{test.created_date}}</p>
-      {% for test_result in tests_results %}
-           <!--DELETE--> {% if test_result.test_id == test.id and test_result.user_id == user.id %}  
-                <p>Test Passed!</p>
-                <p>Right answers {{test_result.correct_answers}}</p>
-            {% endif %}
-            {% endfor %}
-        <p>{{test.description}}</p>
-        <br>
-        <br>
-        <br>
-    {% endfor %}
-      <br>
-{% endblock %}
-if 
+      <p>Right answers {{test_result.correct_answers}}</p>
+      <p>{{test.description}}</p>
+    </div>
+    {% endif %}
+  {% endfor %}
+{% endfor %}
+{% endif %}
+<br>

@@ -1,13 +1,29 @@
 ul {
-  margin-left:  0;
+  margin-left: 0;
   padding-left: 0;
 }
 
-li{
-    list-style-type: none;
-    padding: 5px 0;
+li {
+  list-style-type: none;
+  padding: 5px 0;
 }
 
 .data-container {
   padding: 7px;
+}
+
+.center-b {
+  text-align: center;
+}
+
+.static-margin {
+  margin: 20px 0;
+}
+
+.right-b {
+  text-align: right;
+}
+
+.radio-margin {
+  margin-right: 15px;
 }

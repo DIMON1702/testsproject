@@ -2,8 +2,9 @@
 
 
 {% block content %}
-
-       <h2>Test passed!</h2>
-       <p>Right answers {{ result }}</p>
-       <p>Percent of your luck {{ percent_res }}%</p>
+<div class="alert alert-success" role="alert">
+  <h1>Test passed!</h1>
+  <h5>Percent of correct answers {{ percent_res }}%</h5>
+  <h6>Number of correct answers {{ result }}</h6>
+</div>
 {% endblock %}

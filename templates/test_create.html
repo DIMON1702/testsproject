@@ -2,73 +2,72 @@
 
 {% load static %}
 
-{% block breadcrumb %}
-  <li class="breadcrumb-item active">New Test</li>
-{% endblock %}
-
 {% block content %}
 
 <script src="{% static 'js/questions.js' %}"></script>
-  <form id="test_form" method="post"> 
-    {% csrf_token %}
-      
-    <div class="row form-group data-container">
-      <div class="col-2">
-        <label>Test Name: </label>
-      </div>
-      <div class="col-10">
-        <input type="text" id="test_name" name="test_name" class="test-name form-control" required />
-      </div>
-    </div>
+<form id="test_form" method="post">
+  {% csrf_token %}
 
-     <div class="row form-group data-container">
-      <div class="col-2">
-        <label>Description: </label>
-      </div>
-      <div class="col-10">
-        <textarea id="test_description" name="test_description" class="test-description form-control" required ></textarea>
-      </div>
+  <div class="row form-group data-container ">
+    <div class="col-2">
+      <h3><label>Test Name: </label></h3>
     </div>
-
-    <div class="row" id="test_container">
-      {% for j in j|rjust:5 %}<!--Тут цикл в 5 елементів (вопроси)-->
-        <div id="queston_1" name="queston_1" class="question col-12 form-group data-container">
-          <div class="row">
-            <div class="col-2">
-              <label>Question: </label>
-            </div>
-            <div class="col-10">
-              <textarea  name="question_text_{{ forloop.counter }}" class="question-text form-control" required ></textarea>
-            </div>
-          </div>
-          <ul>
-          {% for i in i|rjust:4 %}<!--Тут цикл в 4 елемента (відповіді)--> 
-            <li>
-              <div class="row">
-                <div class="col-1">
-                  <input type="radio" class="radio-answer" name="correct_answer_{{forloop.parentloop.counter}}" value="answer_{{forloop.parentloop.counter}}_{{forloop.counter}}" required />
-                </div>
-                <div class="col-11">
-                  <input type="text" name="answer_{{forloop.parentloop.counter}}_{{ forloop.counter }}" class="answer form-control" required />
-                </div>
-              </div>
-            </li>
-          {% endfor %}
-          </ul>
-          <button type="button" class="btn btn-danger btn-sm button-remove">Remove</button>
-        </div>
-        {% endfor %}
-      </div>
-      <div class="row">
-    <div class="col-6">
-      <button type="button" id="add_question_button" class="btn btn-primary float-right">Add Question</button>
-    </div>
-    <div class="col-6">
-      <input type ="submit" id="save_test_button" value="Save Test" class="btn btn-success float-left"/>
+    <div class="col-10">
+      <input type="text" id="test_name" name="test_name" class="test-name form-control" required />
     </div>
   </div>
-  </form>
 
-  
+  <div class="row form-group data-container">
+    <div class="col-2">
+      <h5><label>Description: </label></h5>
+    </div>
+    <div class="col-10">
+      <textarea id="test_description" name="test_description" class="test-description form-control" required></textarea>
+    </div>
+  </div>
+
+  <div class="row" id="test_container">
+    {% for j in j|rjust:5 %}
+    <!--Тут цикл в 5 елементів (вопроси)-->
+    <div id="queston_1" name="queston_1" class="question col-12 form-group data-container">
+      <div class="row">
+        <div class="col-2">
+          <h5><label>Question: </label></h5>
+        </div>
+        <div class="col-10">
+          <textarea name="question_text_{{ forloop.counter }}" class="question-text form-control" required></textarea>
+        </div>
+      </div>
+      <ul>
+        {% for i in i|rjust:4 %}
+        <!--Тут цикл в 4 елемента (відповіді)-->
+        <li>
+          <div class="row">
+            <div class="col-1">
+              <input type="radio" class="radio-answer" name="correct_answer_{{forloop.parentloop.counter}}"
+                value="answer_{{forloop.parentloop.counter}}_{{forloop.counter}}" required />
+            </div>
+            <div class="col-11">
+              <input type="text" name="answer_{{forloop.parentloop.counter}}_{{ forloop.counter }}"
+                class="answer form-control" required />
+            </div>
+          </div>
+        </li>
+        {% endfor %}
+      </ul>
+      <button type="button" class="btn btn-danger btn-sm button-remove">Remove</button>
+    </div>
+    {% endfor %}
+  </div>
+
+</form>
+<div class="row">
+  <div class="col-6">
+    <button type="button" id="add_question_button" class="btn btn-primary float-right">Add Question</button>
+  </div>
+  <div class="col-6">
+    <button type="button" id="save_test_button" class="btn btn-success float-left">Save Test</button>
+  </div>
+</div>
 
 {% endblock %}

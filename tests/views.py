@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.generic import DetailView, ListView, TemplateView, FormView
 from django.core.exceptions import ObjectDoesNotExist
 import json
-
+from django.http import JsonResponse, HttpResponse
 from .models import Test, Question, Answer, Comment, TestResult
 from .forms import AddTest
 
@@ -11,11 +11,8 @@ from .forms import AddTest
 def home(request):
     return render(request, 'home.html')
 
-# TODO:  search, filter forpassed tests
-
-
 def all_tests(request):
-    #sort_type = 'not_passed'
+    view = "all"
     if 'q' in request.GET and request.GET['q']:
         if request.GET['q'].strip():
             query_string = request.GET.get('q')
@@ -32,24 +29,9 @@ def all_tests(request):
         tests_results = TestResult.objects.filter(user_id=user.id)
 
         if 'view' in request.GET:
-            #    tests_results = TestResult.objects.filter(
-            #        user_id=user.id).select_related('user')
+            view = "only_passed"
 
-            tests_results = TestResult.objects.filter(
-                user_id=user.id).values('test_id')
-            tests = Test.objects.filter(id__in=tests_results)
-
-            # not that operation
-
-            tests = Test.objects.difference(Test.objects.filter().values('id'),
-                                            TestResult.objects.filter(user_id=user.id).values('test_id'))
-
-            # for test in tests:
-            #   if tests_result.filter(test_id__in=tests).exists():
-
-            # tests = Test.objects.filter(id=tests_user_pass.values('test_id')) #как здесь получить список всех моделей теста у которых тест_ид совпадает с ид теста?
-
-    return render(request, 'all_tests.html', {'tests': tests, 'tests_results': tests_results, 'user': user})
+    return render(request, 'all_tests.html', {'tests': tests, 'tests_results': tests_results, 'user': user, 'view': view})
 
 
 def test_view(request, id):
@@ -62,28 +44,16 @@ def test_view(request, id):
             return redirect('test_list', test.id)
         else:
             return render(request, 'test_result.html', {'result': test_res.correct_answers, 'percent_res': test_res.correct_answers_percent})
-        # render(request, 'test_list.html', {'test': test})
 
     return render(request, 'test_view.html', {'test': test})
 
-# TODO: 4th step
 @login_required
 def test_create(request):
     if request.method == 'POST':
         form = AddTest(request.POST)
-
     else:
         form = AddTest()
     return render(request, 'test_create.html', {'form': form})
-
-
-'''class TestListView(ListView):
-    model = Test
-
-    def get_queryset(self):
-        queryset = super(TestListView, self).get_queryset()
-        return  queryset.filter()
-'''
 
 
 @login_required
@@ -144,7 +114,6 @@ def new_comment(request, id):
     return render(request, 'new_comment.html', {'test': test})
 
 
-
 def test_json(request):
     if request.method == 'POST':
         new_test = json.loads(request.POST['jsonObj'])
@@ -155,7 +124,7 @@ def test_json(request):
         test = Test.objects.create(
             name=test_name,
             description=test_description,
-            created_by = user
+            created_by=user
         )
         for question in questions:
             question_name = question["text"]
@@ -170,4 +139,5 @@ def test_json(request):
                     is_right=answer["isCorrect"],
                     question=new_question
                 )
-    return redirect('all_tests')
+        return JsonResponse({'redirect_url': 'all_tests'})
+    # return redirect('all_tests')

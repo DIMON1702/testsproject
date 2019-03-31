@@ -7,8 +7,6 @@ $(document).ready(function () {
     $('#test_container').children()
         .each(function (index, element) {
             var questionContainer = $(element);
-
-            var dd = questionContainer.children('.button-remove');
             questionContainer.children(".button-remove").click(function () {
                 removeQuestion(questionContainer);
             })
@@ -22,19 +20,27 @@ $(document).ready(function () {
         });
 
     // submit crete test form event handler
-    $('#test_form').submit(function (event) {
+    $('#save_test_button').click(function () {
+        var form = $('#test_form');
         var data = {};
-        fillTestName(this, data);
-        fillTestDescription(this, data);
-        fillQuestions(this, data);
-        var token = $( "input[name='csrfmiddlewaretoken']" ).val()
+        fillTestName(form, data);
+        fillTestDescription(form, data);
+        fillQuestions(form, data);
+        var token = $("input[name='csrfmiddlewaretoken']").val()
         var jsonObj = JSON.stringify(data);
         $.ajax({
             url: '/test_upload',
             type: 'POST',
-            data: {'csrfmiddlewaretoken':token,jsonObj}, 
-            dataType: 'json'
-          });
+            data: {
+                'csrfmiddlewaretoken': token,
+                jsonObj
+            },
+            dataType: 'json',
+            success: function (data) {
+                window.location.href = '/' + data['redirect_url'];
+            },
+            error: function (data, e) {}
+        });
     });
 
     // ==== Begin get post form data section ====
@@ -52,14 +58,14 @@ $(document).ready(function () {
         $(test).find('.question')
             .each(function (index, element) {
                 var question = {};
-                
+
                 question['text'] = $(element).find('.question-text').val();
                 fillAnswers(question, element);
-            
+
                 testQuestions.push(question);
             });
 
-        data['questions'] = testQuestions; 
+        data['questions'] = testQuestions;
     }
 
     var fillAnswers = function (question, data) {
@@ -69,7 +75,7 @@ $(document).ready(function () {
                 var answer = {};
                 var answerText = $(element).find('.answer');
                 var isCorrectAnswer = $(element).find('.radio-answer').is(':checked');
-      
+
                 answer['answer_text'] = $(answerText).val();
                 answer['isCorrect'] = isCorrectAnswer;
 
@@ -87,17 +93,17 @@ $(document).ready(function () {
         var newQuestion = getNewQuestionTemplate(container);
         container.append(newQuestion);
     }
-    
+
     var getNewQuestionTemplate = function (container) {
         questionCount += 1;
-    
+
         // clone first element
         var questionTemplate = container.children(':first')
             .clone();
-    
+
         // reset question text
         questionTemplate.find('.question-text').val('');
-    
+
         // reset answers
         questionTemplate.find('li')
             .each(function (index, element) {
@@ -106,28 +112,28 @@ $(document).ready(function () {
                     .attr('name', 'correct_answer_' + questionCount)
                     .prop("checked", false)
                     .val('answer_' + questionCount + '_' + index);
-    
+
                 answer.find('.answer')
                     .attr('name', 'answer_' + questionCount + '_' + index)
                     .val('');
             });
-    
+
         // set remove question event handler
         questionTemplate.find('.button-remove')
             .click(function () {
                 removeQuestion(questionTemplate);
             });
-    
+
         return questionTemplate;
     }
-    
+
     var removeQuestion = function (question) {
         if (!isValidMinQuestionCount()) {
             alert('Test should contain at least 5 tests');
-            
+
             return;
         }
-        
+
         question.remove();
     }
 
@@ -138,6 +144,5 @@ $(document).ready(function () {
     var isValidMinQuestionCount = function () {
         return $('#test_container').children().length <= 5 ? false : true;
     }
-
     // ==== End post form data validation section ====
 })
