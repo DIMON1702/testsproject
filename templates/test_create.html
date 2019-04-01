@@ -9,7 +9,6 @@
 <script src="{% static 'js/questions.js' %}"></script>
 <form id="test_form" method="post">
   {% csrf_token %}
-
   <div class="row form-group data-container ">
     <div class="col-2">
       <h3><label>Test Name: </label></h3>
@@ -30,7 +29,6 @@
 
   <div class="row" id="test_container">
     {% for j in j|rjust:5 %}
-    <!--Тут цикл в 5 елементів (вопроси)-->
     <div id="queston_1" name="queston_1" class="question col-12 form-group data-container">
       <div class="row">
         <div class="col-2">
@@ -42,7 +40,6 @@
       </div>
       <ul>
         {% for i in i|rjust:4 %}
-        <!--Тут цикл в 4 елемента (відповіді)-->
         <li>
           <div class="row">
             <div class="col-1">
@@ -61,8 +58,8 @@
     </div>
     {% endfor %}
   </div>
-
 </form>
+
 <div class="row">
   <div class="col-6">
     <button type="button" id="add_question_button" class="btn btn-primary float-right">Add Question</button>

@@ -11,19 +11,18 @@
       <button type="submit" class="btn btn-primary">search</button>
     </form>
     {% if seens != None %}
-    {% for seen in seens %}
-    <a href="{% url 'test_view' seen.id %}">{{ seen.name }}</a>
-    <p>{{ seen.description }}</p>
-    {% empty %}
-    <p> No results </p>
-    {% endfor %}
+      {% for seen in seens %}
+        <a href="{% url 'test_view' seen.id %}">{{ seen.name }}</a>
+        <p>{{ seen.description }}</p>
+      {% empty %}
+        <p> No results </p>
+      {% endfor %}
     {% endif %}
   </div>
   <div class="col">
     <form method="GET">
       New posts last
       <input type="checkbox" name="order_by" />
-
       View only passed tests
       <input type="checkbox" name="view" />
       <button type="submit" class="btn btn-primary">Change</button>
@@ -43,8 +42,8 @@
         {% for test_result in tests_results %}
           {% if test_result.test_id == test.id %}
             <div class="alert alert-success" role="alert">
-            <p>Test Passed!</p>
-            <p>Right answers {{test_result.correct_answers}} - {{test_result.correct_answers_percent}}%</p>
+              <p>Test Passed!</p>
+              <p>Right answers {{test_result.correct_answers}} - {{test_result.correct_answers_percent}}%</p>
             </div>
           {% endif %}
         {% endfor %}
@@ -64,8 +63,8 @@
             <h5 class="card-title">{{ test.name }}</h5>
             <p class="card-text">{{test.description}}</p>
             <div class="alert alert-success" role="alert">
-            <p>Test Passed!</p>
-            <p>Right answers {{test_result.correct_answers}} - {{test_result.correct_answers_percent}}%</p>
+              <p>Test Passed!</p>
+              <p>Right answers {{test_result.correct_answers}} - {{test_result.correct_answers_percent}}%</p>
             </div>
             <a href="{% url 'test_view' test.id %}" class="btn btn-primary">View test</a>
           </div>
@@ -75,39 +74,3 @@
   {% endfor %}
 {% endif %}
 {% endblock %}
-
-
-
-
-
-
-{% if view == "all" %}
-  {% for test in tests %}
-  <div>
-    <a href="{% url 'test_view' test.id %}">{{ test.name }}</a>
-    <p>Created {{test.created_date}}</p>
-    {% for test_result in tests_results %}
-      {% if test_result.test_id == test.id %}
-        <p>Test Passed!</p>
-        <p>Right answers {{test_result.correct_answers}}</p>
-      {% endif %}
-    {% endfor %}
-    <p>{{test.description}}</p>
-  </div>
-  {% endfor %}
-
-{% else %}
-{% for test_result in tests_results %}
-  {% for test in tests %}
-    {% if test_result.test_id == test.id %}
-    <div>
-      <a href="{% url 'test_view' test.id %}">{{ test.name }}</a>
-      <p>Created {{test.created_date}}</p>
-      <p>Right answers {{test_result.correct_answers}}</p>
-      <p>{{test.description}}</p>
-    </div>
-    {% endif %}
-  {% endfor %}
-{% endfor %}
-{% endif %}
-<br>

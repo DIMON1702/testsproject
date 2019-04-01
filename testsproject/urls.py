@@ -16,12 +16,11 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
+from django.conf.urls.static import static
+from django.conf import settings
 
 from accounts import views as accounts_views
 from tests import views as tests_views
-
-from django.conf.urls.static import static
-from django.conf import settings
 
 
 urlpatterns = [

@@ -9,18 +9,17 @@
 {% endblock %}
 
 {% block content %}
- <form action="/test_result/" method="post" >
-    {% csrf_token %}
-    {% include 'includes/form.html' %}
-    <h1>{{test.name}}</h1>
-    
+<form action="/test_result/" method="post" >
+  {% csrf_token %}
+  {% include 'includes/form.html' %}
+  <h1>{{test.name}}</h1>
   {% for question in test.get_questions %}
     <ul class="list-group static-margin"><h4>{{question}}</h4>
-    {% for answer in question.get_answers %}
-       <li class="list-group-item"> <input class="radio-margin" type=radio name={{question.id}} value = {{answer.id}} required >{{answer}}</li>
-    {% endfor %}
-    </ul>  
+      {% for answer in question.get_answers %}
+        <li class="list-group-item"> <input class="radio-margin" type=radio name={{question.id}} value = {{answer.id}} required >{{answer}}</li>
+      {% endfor %}
+    </ul>
   {% endfor %}  
   <button type="submit" class="btn btn-primary btn-block static-margin">Submit</button>
-   </form>
+</form>
 {% endblock %}

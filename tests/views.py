@@ -1,15 +1,15 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
-from django.views.generic import DetailView, ListView, TemplateView, FormView
 from django.core.exceptions import ObjectDoesNotExist
 import json
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse
 from .models import Test, Question, Answer, Comment, TestResult
 from .forms import AddTest
 
 
 def home(request):
     return render(request, 'home.html')
+
 
 def all_tests(request):
     view = "all"
@@ -47,6 +47,7 @@ def test_view(request, id):
 
     return render(request, 'test_view.html', {'test': test})
 
+
 @login_required
 def test_create(request):
     if request.method == 'POST':
@@ -63,7 +64,6 @@ def test_list(request, id):
     return render(request, 'test_list.html', {'test': test, 'questions': questions})
 
 
-# @login_required
 def test_result(request):
     if request.method == 'POST':
         correct_answers = 0
@@ -91,8 +91,8 @@ def test_result(request):
             test_result.save()
 
             return render(request, 'test_result.html', {'result': correct_answers, 'percent_res': correct_answers_percent})
-        # else: #TODO: request to test_list
-        #    return render(request, 'test_view.html', {'test': test})
+    else:
+        return redirect('all_tests')
 
     return render(request, 'test_result.html')
 
@@ -100,10 +100,8 @@ def test_result(request):
 @login_required
 def new_comment(request, id):
     test = get_object_or_404(Test, id=id)
-
     if request.method == 'POST':
         message = request.POST['message']
-
         comment = Comment.objects.create(
             text=message,
             test_id=id,
@@ -140,4 +138,3 @@ def test_json(request):
                     question=new_question
                 )
         return JsonResponse({'redirect_url': 'all_tests'})
-    # return redirect('all_tests')

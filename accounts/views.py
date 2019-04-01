@@ -1,9 +1,5 @@
 from django.contrib.auth import login as auth_login
 from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
-from django.urls import reverse_lazy
-from django.utils.decorators import method_decorator
-from django.views.generic import UpdateView
 
 from .forms import SignUpForm, AddProfileInfo
 from .models import User
@@ -26,9 +22,9 @@ def save_profile(request):
         form = AddProfileInfo(request.POST, request.FILES)
         if form.is_valid():
             user_form = form.save(commit=False)
-            new_user=request.user
+            new_user = request.user
             for field in form.Meta.fields:
-                setattr(new_user,field, getattr(user_form, field))
+                setattr(new_user, field, getattr(user_form, field))
             new_user.save()
     else:
         dictionary = {}

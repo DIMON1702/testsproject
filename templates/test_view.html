@@ -3,7 +3,6 @@
 {% block title %}{{test.name}} - preview{% endblock %}
 
 {% block content %}
-<!-- block test -->
 <div class="row static-margin">
   <div class="col-9 center-b">
     <h2>{{test.name}}</h2>
@@ -31,7 +30,6 @@
     </form>
   </div>
 </div>
-<!-- block comments -->
 
 <div class="container">
   {% for comment in test.get_comments %}
